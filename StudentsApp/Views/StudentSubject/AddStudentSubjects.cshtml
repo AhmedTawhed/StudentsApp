@@ -1,0 +1,100 @@
+﻿@model StudentSubject
+
+@{
+    ViewData["Title"] = "AddStudentSubjects";
+}
+
+<h2 class="display-4">Assign Subjects</h2>
+
+<div class="container">
+<form method="post" class="mt-4">
+    <div class="form-group">
+        <label asp-for="StudentId">Student Name</label>
+        <input asp-for="Student.Name" class="form-control form-control-lg" disabled />
+    </div>
+
+    <h5 class="mb-3">Current Subjects:</h5>
+    <ul class="list-group">
+        @foreach (var subject in ViewBag.subjects)
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>@subject.Text</span>
+                <button class="btn btn-danger delete-button" data-subject-id="@subject.Value.ToString()" data-student-id="@Model.StudentId.ToString()">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </li>
+        }
+    </ul>
+
+    <div class="form-group-lg mt-4">
+        <label asp-for="SubjectId" class="form-label">All Subjects</label>
+        <select asp-for="SubjectId" asp-items="ViewBag.allSubjects" class="form-control">
+            <option value="">Select subjects</option>
+        </select>
+    </div>
+<br />
+<br />
+    <div class="form-group">
+         <a asp-action="Details" asp-controller="StudentSubject" asp-route-Id="@Model.StudentId" class="btn btn-outline-primary">Back</a>
+         <input hidden asp-for="StudentId" class="form-control" />
+         <input type="submit" value="Save" class="btn btn-secondary mx-3" />
+     </div>
+    </form>
+</div>
+<br />
+<br />
+<a asp-action="GetAllStudents" asp-controller="Student" class="btn btn-outline-primary mx-3">Back To List</a>
+
+
+
+@section Scripts{
+    <script src="/assets/plugins/global/plugins.bundle.js"></script>
+    <script src="/assets/js/scripts.bundle.js"></script>
+    <script src="/assets/js/dashboard-main.js"></script>
+    <script src="/js/sweetalert.min.js"></script>
+    <script src="/js/quicksearch.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://cdn.datatables.net/v/dt/dt-1.13.6/datatables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $(".delete-button").click(function (event) {
+                event.preventDefault(); 
+
+                var studentId = $(this).data("student-id");
+                var subjectId = $(this).data("subject-id");
+                var confirmationMessage = "Are you sure you want to remove this subject?";
+
+                Swal.fire({
+                    title: "Confirm Delete",
+                    text: confirmationMessage,
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes, remove it!",
+                    cancelButtonText: "Cancel"
+                }).then(function (result) {
+                    if (result.isConfirmed) {
+                        var url = "/studentsubject/DeleteStudentSubject";
+
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            data: { studentId: studentId, subjectId: subjectId },
+
+                            success: function () {
+                                Swal.fire("Removed!", "The subject has been removed.", "success").then(function () {
+                                    window.location.reload();
+                                });
+                            },
+                            error: function (xhr, status, error) {
+                                Swal.fire("Error!", "An error occurred while removing the subject.", "error");
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+    }

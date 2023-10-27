@@ -1,0 +1,32 @@
+﻿@model StudentWithSubjectsViewModel
+@using System;
+
+@{
+    ViewData["Title"] = "Add Student Subject";
+}
+
+<h1 class="display-4">Assign Subjects to Students</h1>
+
+<form method="post">
+    <div class="form-group mt-4">
+        <label for="studentIds">Students</label>
+        <select multiple id="studentIds" name="StudentIds" asp-items="ViewBag.students" class="form-control">
+            <option value="">Select students</option>
+        </select>
+    </div>
+
+    <div class="form-group mt-5">
+        <label for="subjectIds">Subjects</label>
+        <select multiple id="subjectIds" name="SubjectIds" asp-items="ViewBag.subjects" class="form-control">
+            <option value="">Select subjects</option>
+        </select>
+    </div>
+
+    <div class="form-group mt-5">
+        <button type="submit" class="btn btn-secondary">Assign</button>
+    </div>
+</form>
+<br />
+<br />
+<br />
+<a asp-action="GetAllStudents" asp-controller="Student" class="btn btn-outline-primary">Back To List</a>

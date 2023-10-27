@@ -1,0 +1,96 @@
+﻿@model IEnumerable<Subject>
+@{
+    ViewData["Title"] = "GetAllSubjects";
+}
+
+<h1>Subjects</h1>
+<div class="container">
+    <div class="d-flex justify-content-end mb-3">
+        <a asp-action="Add" asp-controller="Subject" class="btn btn-dark btn-sm">Add New Subject</a>
+    </div>
+    <div class="table-responsive">
+        <table id="myTable" class="table table-bordered table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">Code</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var subject in Model)
+                {
+                    <tr>
+                        <td>@subject.Code</td>
+                        <td>@subject.Name</td>
+                        <td>
+                            <div class="btn-group" role="group" aria-label="Actions">
+                                <a asp-action="Update" asp-controller="Subject" asp-route-id="@subject.Id" class="btn btn-outline-dark btn-sm">
+                                    <i class="bi bi-pencil-fill"></i> Edit
+                                </a>
+                                <button class="btn btn-danger delete-button mx-3 btn-sm" data-subject-id="@subject.Id.ToString()">
+                                    <i class="bi bi-trash-fill"></i> Delete
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script src="/assets/plugins/global/plugins.bundle.js"></script>
+    <script src="/assets/js/scripts.bundle.js"></script>
+    <script src="/assets/js/dashboard-main.js"></script>
+    <script src="/js/sweetalert.min.js"></script>
+    <script src="/js/quicksearch.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://cdn.datatables.net/v/dt/dt-1.13.6/datatables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $(".delete-button").click(function (event) {
+                event.preventDefault();
+
+                var subjectId = $(this).data("subject-id");
+                var confirmationMessage = "Are you sure you want to delete this subject?";
+
+                Swal.fire({
+                    title: "Confirm Delete",
+                    text: confirmationMessage,
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes, delete it!",
+                    cancelButtonText: "Cancel"
+                }).then(function (result) {
+                    if (result.isConfirmed) {
+                        var url = "/subject/Delete";
+
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            data: { subjectId: subjectId },
+
+                            success: function () {
+                                Swal.fire("Deleted!", "The subject has been deleted.", "success").then(function () {
+                                    window.location.reload();
+                                });
+                            },
+                            error: function (xhr, status, error) {
+                                Swal.fire("Error!", "An error occurred while deleting the subject.", "error");
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}
+
+
+

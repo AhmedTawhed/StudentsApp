@@ -1,0 +1,60 @@
+﻿@model StudentSubject
+
+@{
+    ViewData["Title"] = "AddStudentSubjectsGrades";
+}
+
+<h2 class="display-4">Assign Grades</h2>
+
+<div class="container">
+    <form method="post" class="mt-4">
+        <div class="form-group">
+            <label asp-for="StudentId">Student Name</label>
+            <input asp-for="Student.Name" class="form-control form-control-lg" disabled />
+        </div>
+        <div class="mb-3">
+            <label asp-for="SubjectId" class="form-label">Subjects</label>
+            <select id="subject-id" asp-for="SubjectId" asp-items="ViewBag.subjects" class="form-select">
+                <option value="">Select subjects</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="Grade" class="form-label">Grade</label>
+            <input id="grade" asp-for="Grade" class="form-control" />
+            <span asp-validation-for="Grade" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <a asp-action="Details" asp-controller="StudentSubject" asp-route-Id="@Model.StudentId" class="btn btn-outline-primary">Back</a>
+            <input hidden asp-for="StudentId" class="form-control" />
+            <input type="submit" value="Save" class="btn btn-secondary mx-3" />
+        </div>
+    </form>
+</div>
+<br />
+<br />
+<a asp-action="GetAllStudents" asp-controller="Student" class="btn btn-outline-primary">Back To List</a>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#subject-id").change(function () {
+                var subjectId = $(this).val();
+                var url = "/studentsubject/GetGrade/";
+                $.ajax({
+                    type: 'GET',
+                    dataType: 'json',
+                    url: url,
+                    data: { studentId: '@Model.StudentId', subjectId: subjectId },
+                    success: function (response) {
+                        $("#grade").val(response);
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Error: " + error);
+                    }
+                });
+            });
+        });
+    </script>
+}

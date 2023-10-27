@@ -1,0 +1,43 @@
+﻿@model Student
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1 class="display-4">@Model.Name</h1>
+
+<div class="container">
+    <div class="d-flex justify-content-between mb-3">
+        <a asp-action="AddStudentSubjects" asp-controller="StudentSubject" asp-route-Id="@Model.Id" class="btn btn-outline-dark btn-sm">Add/Edit Subjects</a>
+        <a asp-action="AddStudentSubjectsGrades" asp-controller="StudentSubject" asp-route-Id="@Model.Id" class="btn btn-outline-dark btn-sm">Add/Edit Grades</a>
+    </div>
+    <div class="table">
+        <table id="myTable" class="table table-bordered table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">Subject</th>
+                    <th scope="col">Grade</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var subject in ViewBag.subjects)
+                {
+                    <tr>
+                        <td>@subject.Name</td>
+                        <td>
+                            @foreach (var grade in ViewBag.grades)
+                            {
+                                if (grade.SubjectId == subject.Id)
+                                {
+                                    <span style="color: @(grade.Grade < 50 ? "red" : "green")">@grade.Grade</span>
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<br />
+<br />
+<a asp-action="GetAllStudents" asp-controller="Student" class="btn btn-outline-primary">Back To List</a>

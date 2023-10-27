@@ -1,0 +1,30 @@
+﻿@model Subject
+@{
+    ViewData["Title"] = "Update";
+}
+
+<h1 class="display-4">Edit</h1>
+
+<div class="container">
+    <form method="post" asp-action="Update">
+        <div class="mb-3">
+            <label asp-for="Code" class="form-label">Code</label>
+            <input asp-for="Code" class="form-control" />
+            <span asp-validation-for="Code" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Name" class="form-label">Name</label>
+            <input asp-for="Name" name="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>           
+        <input type="submit" value="Save" class="btn btn-dark" />
+    </form>
+    <br />
+    <br />
+    <a asp-action="GetAllSubjects" class="btn btn-outline-primary">Back To List</a>
+</div>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}
+
